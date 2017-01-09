@@ -13,6 +13,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import next.config.AppConfig;
 import next.config.WebMvcConfig;
 
 public class MyWebInitializer implements WebApplicationInitializer {
@@ -27,7 +28,8 @@ public class MyWebInitializer implements WebApplicationInitializer {
 				.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
 
 		AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext();
-		webContext.register(WebMvcConfig.class);
+		webContext.register(WebMvcConfig.class, AppConfig.class);
+		
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("next", new DispatcherServlet(webContext));
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");

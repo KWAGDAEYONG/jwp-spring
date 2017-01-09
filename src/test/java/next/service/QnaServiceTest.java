@@ -30,10 +30,6 @@ public class QnaServiceTest {
     
     private QnaService qnaService;
 
-    @Before
-    public void setup() {
-    	qnaService = new QnaService(questionDao, answerDao);
-    }
     
     @Test(expected = EmptyResultDataAccessException.class)
     public void deleteQuestion_없는_질문() throws Exception {

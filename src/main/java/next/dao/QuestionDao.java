@@ -7,24 +7,21 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import core.jdbc.JdbcTemplate;
-import core.jdbc.KeyHolder;
-import core.jdbc.PreparedStatementCreator;
-import core.jdbc.RowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
 import next.model.Question;
 
+@Repository
 public class QuestionDao {
-	private static QuestionDao questionDao;
-	private JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
 	
-	private QuestionDao() {}
-	
-	public static QuestionDao getInstance() {
-		if (questionDao == null) {
-			questionDao = new QuestionDao();
-		}
-		return questionDao;
-	}
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 	
     public Question insert(Question question) {
         String sql = "INSERT INTO QUESTIONS (writer, title, contents, createdDate) VALUES (?, ?, ?, ?)";
@@ -40,9 +37,9 @@ public class QuestionDao {
 			}
 		};
         
-		KeyHolder keyHolder = new KeyHolder();
+		KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(psc, keyHolder);
-        return findById(keyHolder.getId());
+        return findById((long) keyHolder.getKey());
     }
 	
 	public List<Question> findAll() {
@@ -50,8 +47,9 @@ public class QuestionDao {
 				+ "order by questionId desc";
 		
 		RowMapper<Question> rm = new RowMapper<Question>() {
+
 			@Override
-			public Question mapRow(ResultSet rs) throws SQLException {
+			public Question mapRow(ResultSet rs, int arg1) throws SQLException {
 				return new Question(rs.getLong("questionId"),
 						rs.getString("writer"), rs.getString("title"), null,
 						rs.getTimestamp("createdDate"),
@@ -68,8 +66,9 @@ public class QuestionDao {
 				+ "WHERE questionId = ?";
 		
 		RowMapper<Question> rm = new RowMapper<Question>() {
+
 			@Override
-			public Question mapRow(ResultSet rs) throws SQLException {
+			public Question mapRow(ResultSet rs, int arg1) throws SQLException {
 				return new Question(rs.getLong("questionId"),
 						rs.getString("writer"), rs.getString("title"),
 						rs.getString("contents"),

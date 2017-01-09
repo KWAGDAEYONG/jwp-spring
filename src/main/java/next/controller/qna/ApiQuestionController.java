@@ -3,6 +3,19 @@ package next.controller.qna;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.collect.Maps;
+
+import core.web.argumentresolver.LoginUser;
 import next.CannotOperateException;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
@@ -12,26 +25,17 @@ import next.model.Result;
 import next.model.User;
 import next.service.QnaService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.collect.Maps;
-
-import core.jdbc.DataAccessException;
-import core.web.argumentresolver.LoginUser;
-
 @RestController
 @RequestMapping("/api/questions")
 public class ApiQuestionController {
 	private Logger log = LoggerFactory.getLogger(ApiQuestionController.class);
 	
-	private QuestionDao questionDao = QuestionDao.getInstance();
-	private AnswerDao answerDao = AnswerDao.getInstance();
-	private QnaService qnaService = new QnaService(questionDao, answerDao);
+	@Autowired
+	private QuestionDao questionDao;
+	@Autowired
+	private AnswerDao answerDao;
+	@Resource
+	private QnaService qnaService;
 	
 	@RequestMapping(value="/{questionId}", method=RequestMethod.DELETE)
 	public Result deleteQuestion(@LoginUser User loginUser, @PathVariable long questionId) throws Exception {
@@ -71,7 +75,7 @@ public class ApiQuestionController {
 		try {
 			answerDao.delete(answerId);
 			return Result.ok();
-		} catch (DataAccessException e) {
+		} catch (Exception e) {
 			return Result.fail(e.getMessage());
 		}
 	}
