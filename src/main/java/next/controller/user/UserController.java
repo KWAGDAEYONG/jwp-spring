@@ -20,7 +20,7 @@ import next.model.User;
 @RequestMapping("/users")
 public class UserController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
+	
 	@Autowired
 	private UserDao userDao;
 

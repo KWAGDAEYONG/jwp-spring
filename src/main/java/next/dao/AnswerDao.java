@@ -1,5 +1,7 @@
 package next.dao;
 
+import static org.junit.Assert.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +9,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -19,6 +25,7 @@ import next.model.Answer;
 
 @Repository
 public class AnswerDao {
+	
 	
 	@Autowired
 	private static AnswerDao answerDao;
