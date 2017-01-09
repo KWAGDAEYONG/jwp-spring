@@ -1,7 +1,6 @@
 package next.config;
 
 
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
